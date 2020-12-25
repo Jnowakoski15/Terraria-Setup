@@ -1,14 +1,23 @@
 ---
 - name: Downloads and laucches a Terraria Server
   hosts: localhost
+  vars:
+       version: 1412
   tasks:
-  - name: Download terraria file 
-    get_url:
-     url: https://terraria.org/system/dedicated_servers/archives/000/000/042/original/terraria-server-1412.zip
-     dest: /tmp/terraria.zip
-     mode: '0666'
-  - name: Unzip terraria Server
+  - name: Download and Unzip terraria Server
     unarchive:
-     src: "/tmp/terraria.zip"
+     src: "https://terraria.org/system/dedicated_servers/archives/000/000/042/original/terraria-server-{{version}}.zip"
      dest: "/tmp/"
      list_files: yes
+     remote_src: yes
+  - name: Move the Linux folder
+    command: mv /tmp/{{version}}/Linux $HOME
+  - name: Remove unused files
+    file:
+      state: absent
+      path: "/tmp/{{version}}/"
+  - name: Update permission on executable
+    file:
+      path: "$HOME/Linux/TerrariaServer.bin.x86_64"
+      state: touch
+      mode: "u=rwx"
