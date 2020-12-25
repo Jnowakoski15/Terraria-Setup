@@ -1,0 +1,14 @@
+---
+- name: Downloads and laucches a Terraria Server
+  hosts: localhost
+  tasks:
+  - name: Download terraria file 
+    get_url:
+     url: https://terraria.org/system/dedicated_servers/archives/000/000/042/original/terraria-server-1412.zip
+     dest: /tmp/terraria.zip
+     mode: '0666'
+  - name: Unzip terraria Server
+    unarchive:
+     src: "/tmp/terraria.zip"
+     dest: "/tmp/"
+     list_files: yes
